@@ -1340,7 +1340,7 @@ function arrow(data, options) {
   var center = reference[side] + reference[len] / 2 - arrowElementSize / 2;
 
   // Compute the sideValue using the updated popper offsets
-  // take popper margin in account because we don't have this info available
+  // take popper margin in accounts because we don't have this info available
   var popperMarginSide = getStyleComputedProperty(data.instance.popper, 'margin' + sideCapitalized).replace('px', '');
   var sideValue = center - getClientRect(data.offsets.popper)[side] - popperMarginSide;
 
