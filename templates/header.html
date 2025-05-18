@@ -19,10 +19,10 @@
                 <li class="nav-item {% if request.resolver_match.url_name == "article_list" %}active{% endif %}">
                     <a class="nav-link" href="{% url 'blog:article_list' %}">Blog Entries</a>
                 </li>
-                <li class="nav-item {% if request.resolver_match.url_name == "contact us" %}active{% endif %}">
-                    <a class="nav-link" href="{% url 'home:main' %}">Contact Us</a>
+                <li class="nav-item {% if request.resolver_match.url_name == "contact_form" %}active{% endif %}">
+                    <a class="nav-link" href="{% url 'blog:contact_form' %}">Contact Us</a>
                 </li>
-                <li class="nav-item {% if request.resolver_match.url_name == "main" %}active{% endif %}">
+                <li class="nav-item">
                     {% if request.user.is_authenticated %}
                         <div class="d-flex">
                             {% if user.profile.profile_picture %}
@@ -35,9 +35,9 @@
                                                         width="auto" style="border-radius: 100%"></span>
                             {% endif %}
                             {% if request.user.first_name %}
-                                <a class="nav-link" href="">{{ request.user.first_name }}</a>
+                                <a class="nav-link {% if request.resolver_match.url_name == "edit_profile" %}active{% endif %}" href="{% url 'accounts:edit_profile' %}">{{ request.user.first_name }}</a>
                             {% else %}
-                                <a class="nav-link" href="">{{ request.user.username }}</a>
+                                <a class="nav-link {% if request.resolver_match.url_name == "edit_profile" %}active{% endif %}" href="{% url 'accounts:edit_profile' %}">{{ request.user.username }}</a>
                             {% endif %}
                             <a href="{% url 'accounts:logout' %}"><span
                                     class="badge badge-danger m-1 mt-auto">logout</span></a>

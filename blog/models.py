@@ -3,11 +3,13 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.urls import reverse
 from django.utils.text import slugify
-
+from django.utils import timezone
 
 class Category(models.Model):
     name = models.CharField(max_length=100)
 
+    class Meta:
+        verbose_name_plural = 'Categories'
     def __str__(self):
         return self.name
 
@@ -62,3 +64,16 @@ class Comment(models.Model):
 
     def __str__(self):
         return f'{self.author}: {self.content[:30]}'
+
+
+class ContactUs(models.Model):
+    name = models.CharField(max_length=20)
+    email = models.EmailField()
+    subject = models.CharField(max_length=40)
+    message = models.CharField(max_length=500)
+    created = models.DateTimeField(auto_now_add=True)
+    birth_date = models.DateField(blank=True, default=timezone.now)
+    def __str__(self):
+        return self.name
+    class Meta:
+        verbose_name_plural = 'Contact Us'

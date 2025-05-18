@@ -1,6 +1,11 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
+from .forms import LoginForm, SignupForm, EditProfileForm
+
+"""
+I have problem on signup 
+"""
 
 
 def user_login(request):
@@ -8,34 +13,42 @@ def user_login(request):
         return redirect('home:main')
 
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-        if user is not None:
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            user = User.objects.get(username=form.cleaned_data.get('username'))
             login(request, user)
             return redirect('home:main')
-    return render(request, 'accounts/login.html', {})
+    else:
+        form = LoginForm()
+    return render(request, 'accounts/login.html', {'form': form})
 
 
-def user_sign_up(request):
-    contexts = {'errors': []}
+def user_signup(request):
     if request.user.is_authenticated:
         return redirect('home:main')
     if request.method == 'POST':
-        username = request.POST.get('username')
-        email = request.POST.get('email')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        if password1 != password2:
-            contexts['errors'].append('Passwords are different.')
-            return render(request, 'accounts/sign_up.html', context=contexts)
-        else:
-            user = User.objects.create(username=username, password=password1, email=email)
+        form = SignupForm(request.POST)
+
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            user = User.objects.create_user(username=username, password=password, email=email)
             login(request, user)
             return redirect('home:main')
+    else:
+        form = SignupForm()
+    return render(request, 'accounts/sign_up.html', {'form': form})
 
-    return render(request, 'accounts/sign_up.html', {})
+def edit_profile(request):
+    form = EditProfileForm(instance=request.user)
+    if request.method == 'POST':
+        form = EditProfileForm(instance=request.user, data=request.POST)
+        if form.is_valid():
+            form.save()
 
+    return render(request, 'accounts/edit_profile.html', {'form': form})
 
 def user_logout(request):
     logout(request)
